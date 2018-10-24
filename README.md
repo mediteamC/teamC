@@ -1,3 +1,4 @@
 # teamC
 
-http://35.231.196.209
+our vm: http://35.231.196.209
+login key: TeamC
