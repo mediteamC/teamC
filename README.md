@@ -3,6 +3,10 @@
 our vm: http://35.231.196.209
 login key: TeamC
 
+To finish the cleaning pipeline, we should define the max cropping, and also we should look into skull stripping because it is used ine very mayor paper i have checked. see some code here:
+
+https://github.com/quqixun/BrainPrep
+
 Link to initial paper (GANs for data augmentation): https://link.springer.com/chapter/10.1007%2F978-3-030-00320-3_4
 
 We will replicate the classfication part of the paper for our initial task.
