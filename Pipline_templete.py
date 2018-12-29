@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # In[2]:
-import datetime
+
 
 import pandas as pd
 import numpy as np
@@ -29,8 +29,10 @@ print(psutil.virtual_memory())
 # In[4]:
 # Hard coded parameters dict
 
-#params = {'import_path':'MODEL_SAVE12','batch_size':30,'init_lr':0.01,'decay_freq':10,'data_length':1200,'record_name':'try','state_name':'MODEL_SAVE1','epochs':5}
-params = {'import_path':'','batch_size':40,'init_lr':0.01,'decay_freq':10,'data_length':-1,'record_name':'tryed','state_name':'MODEL_SAVED','epochs':5}
+
+#params = {'import_path':'','batch_size':25,'init_lr':0.01,'decay_freq':25,'data_length':3700,'record_name':'try','state_name':'MODEL_SAVE','epochs':5}
+
+params = {'import_path':'MODEL_SAVE0','batch_size':25,'init_lr':0.1,'decay_freq':20,'data_length':3000,'record_name':'try','state_name':'MODEL_SAVE','epochs':5}
 
 data_length = params['data_length']
 batch_size = params['batch_size']
@@ -43,14 +45,14 @@ import_path = params['import_path']
 
 
 
-mapped_labels = pd.read_excel('NACC_LABELS_CLASSIFICATION_TASK_NEW.xlsx')
-name_touse = mapped_labels.Address_Name[:data_length]
+mapped_labels = pd.read_excel('NACC_LABELS_CLASSIFICATION_TASK_NEW_debug.xlsx')
+name_touse = mapped_labels.Address_Name[:data_length+1]
 
 
 # In[5]:
 
 
-X = teamc_pipline.data_mapper.data_mapping(['Sex_Bin','Age_Norm'],mapping_file_path='NACC_LABELS_CLASSIFICATION_TASK_NEW.xlsx',data_path = '/work/03263/jcha9928/sharedirectory/nacc/',data_names = list(name_touse))
+X = teamc_pipline.data_mapper.data_mapping(['Sex_Bin','Age_Norm'],mapping_file_path='NACC_LABELS_CLASSIFICATION_TASK_NEW_debug.xlsx',data_path = '/work/03263/jcha9928/sharedirectory/nacc/',data_names = list(name_touse))
 
 
 # In[6]:
@@ -89,7 +91,6 @@ test_sampler =SubsetRandomSampler(test_indices)
 
 
 from teamc_pipline import resnet152
-from teamc_pipline import resnet18
 from teamc_pipline import recorder
 
 
@@ -125,11 +126,11 @@ import_path = import_path
 torch.set_num_threads(48)
 print(psutil.virtual_memory())
 if import_path == '':
-    net = resnet18(pretrained=False, num_classes=5)
+    net = resnet152(pretrained=False, num_classes=2)
     model_num = 0
 else:
    model_loader = torch.load(import_path)
-   net = resnet18(pretrained=False, num_classes=5)
+   net = resnet152(pretrained=False, num_classes=5)
    net.load_state_dict(model_loader['state_dict'])
    model_num = model_loader['epoch']
 
@@ -145,7 +146,7 @@ print(psutil.virtual_memory())
 # In[13]:
 
 
-#init_lr = 0.001 #SELECT INITIAL LR
+#init_lr = 0.01 #SELECT INITIAL LR
 
 criterion = nn.CrossEntropyLoss()
 
@@ -210,7 +211,6 @@ for epoch in range(epochs):
              for param_group in optimizer.param_groups:
                 print('[Epoch: %d, Mini Batch: %5d] loss: %.3f / Lr: %.5f'  %
                       (epoch + start_num  + 1, i + 1, running_loss / print_cycle, param_group['lr']))
-                print(datetime.datetime.now())
                 running_loss = 0.0        
         del loss
         del outputs
@@ -234,7 +234,6 @@ for epoch in range(epochs):
     print(np.sum(train_class_total))
     print(train_class_total)
     print(train_class_correct)
-    print(datetime.datetime.now())
 
     net.train(False) 
     with torch.no_grad():
