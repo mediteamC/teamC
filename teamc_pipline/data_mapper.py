@@ -13,7 +13,7 @@ import torch
 import torch.utils.data
 
 class data_mapping(object):
-    def __init__(self,feature_names,mapping_file_path='NACC_LABELS_CLASSIFICATION_TASK_NEW.xlsx',data_path = 'Image/NACC/',data_names = []):
+    def __init__(self,feature_names,mapping_file_path='NACC_LABELS_CLASSIFICATION_TASK_NEW_debug.xlsx',data_path = 'Image/NACC/',data_names = []):
         self.data = pd.read_excel(mapping_file_path)
         self.feature_names = feature_names
         self.data_path = data_path
@@ -31,12 +31,13 @@ class data_mapping(object):
         for f in self.feature_names:
             result[f] = np.array(getattr(self.data,f))
         return result
-    
+    #assenmble data from the tar file
     def assemble_data(self,size=10):
         new_size = 256-2*size
-        self.X = np.zeros((len(self.image_names),1,new_size,new_size,new_size))
+        self.X = np.zeros((len(self.data),1,new_size,new_size,new_size))
         invalid_address = []
         count = 0
+        #print(len(self.image_names),len(self.data))
         for index,row in self.data.iterrows():
             if count % 100 == 0:
                 print(count)
@@ -58,6 +59,8 @@ class data_mapping(object):
                 temp_img = f.get_data()
                 temp_img = self.normlized_img(temp_img)
                 temp_img = self.memory_reduction(temp_img,size)
+               # print(self.data.iloc[count])
+               # print(count)
                 self.X[count][0] = temp_img
                 count+=1
                 os.remove(newpath)
@@ -65,12 +68,12 @@ class data_mapping(object):
                 print(str(e))
                 raise
         useful_data = self.data[~self.data.Label_ID.isin(invalid_address)]
-        self.Y = np.array(useful_data.Diagnosis).reshape(len(self.image_names)-len(invalid_address),-1).ravel()
+        self.Y = np.array(useful_data.Diagnosis).reshape(len(self.data)-len(invalid_address),-1).ravel()
         self.X = self.X.reshape(-1,1,new_size,new_size,new_size)
         
     #helper function
     def get_label(self,tag):# For array output
-        return [0 if i != tag else i for i in range(4)]
+        return [1 if i == tag else 0 for i in range(2)]
     
     def normlized_img(self,image):
         v_min = image.min()
