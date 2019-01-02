@@ -8,14 +8,14 @@ login key: TeamC
 
 We finalized our Pipeline as following:
 
---Mapping reading and merge from NACC dataset (3798 pictures)
---Normalized MRI pictures
---Get the labels and features for each pictures
-  - Note that the labels in the form of array of size (L,1) where L is the number of labels
---Average pooling/cropping the MRI image
---Return all the info in the form of ndarray
+--Mapping reading and merge from NACC dataset (3798 pictures)<br />
+--Normalized MRI pictures<br />
+--Get the labels and features for each pictures<br />
+--Note that the labels in the form of array of size (L,1) where L is the number of labels<br />
+--Average pooling/cropping the MRI image<br />
+--Return all the info in the form of ndarray<br />
 
-Approximate time for preprocessing is around 25mins
+Approximate time for preprocessing is around 25mins<br />
 
 #### https://github.com/quqixun/BrainPrep (check step 5, 6 and 7)
 
